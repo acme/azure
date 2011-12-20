@@ -6,8 +6,10 @@ use Digest::MD5 qw(md5_base64);
 use Digest::SHA qw(hmac_sha256_base64);
 use HTTP::Date;
 use HTTP::Request;
+use HTTP::Request::Common qw(GET HEAD PUT DELETE);
 use LWP::UserAgent;
 use MIME::Base64;
+use URI::URL;
 use URI::QueryParam;
 use XML::LibXML;
 
@@ -17,64 +19,88 @@ my $primary_access_key
     = 'XXX';
 
 # Get Blob Service Properties
-my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/?restype=service&comp=properties" );
+my $uri = URI->new("https://$account.blob.core.windows.net/");
+$uri->query_form( [ restype => 'service', comp => 'properties' ] );
+my $request = GET $uri;
 
 # Create Container
-# my $request = HTTP::Request->new( PUT => "https://$account.blob.core.windows.net/mycontainer?restype=container" );
+# my $uri = URI->new("https://$account.blob.core.windows.net/mycontainer");
+# $uri->query_form( [ restype => 'container' ] );
+# my $request = PUT $uri;
 
 # List Containers
-# my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/?comp=list" );
+# my $uri = URI->new("https://$account.blob.core.windows.net/");
+# $uri->query_form( [ comp => 'list' ] );
+# my $request = GET $uri;
 
 # Get Container Properties
-# my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/mycontainer?restype=container" );
+# my $uri = URI->new("https://$account.blob.core.windows.net/mycontainer");
+# $uri->query_form( [ restype => 'container' ] );
+# my $request = GET $uri;
 
 # Put Container Metadata
-# my $request = HTTP::Request->new( PUT => "https://$account.blob.core.windows.net/mycontainer?restype=container&comp=metadata" );
-# $request->header( ':x-ms-meta-Category', 'Images' );
+# my $uri = URI->new("https://$account.blob.core.windows.net/mycontainer");
+# $uri->query_form( [ restype => 'container', comp => 'metadata' ] );
+# my $request = PUT $uri, ':x-ms-meta-Category' => 'Images';
 
 # Get Container Metadata
-# my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/mycontainer?restype=container&comp=metadata" );
+# my $uri = URI->new("https://$account.blob.core.windows.net/mycontainer");
+# $uri->query_form( [ restype => 'container', comp => 'metadata' ] );
+# my $request = GET $uri;
 
 # Get Container ACL
-# my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/mycontainer?restype=container&comp=acl" );
+# my $uri = URI->new("https://$account.blob.core.windows.net/mycontainer");
+# $uri->query_form( [ restype => 'container', comp => 'acl' ] );
+# my $request = GET $uri;
 
 # Delete Container
-# my $request = HTTP::Request->new( DELETE => "https://$account.blob.core.windows.net/mycontainer?restype=container" );
+# my $uri = URI->new("https://$account.blob.core.windows.net/mycontainer");
+# $uri->query_form( [ restype => 'container' ] );
+# my $request = DELETE $uri;
 
 # List Blobs
-# my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/mycontainer?restype=container&comp=list&include=metadata" );
+# my $uri = URI->new("https://$account.blob.core.windows.net/mycontainer");
+# $uri->query_form( [ restype => 'container', comp => 'list', include => 'metadata' ] );
+# my $request = GET $uri;
 
 # Put Blob
-# my $request = HTTP::Request->new( PUT => "https://$account.blob.core.windows.net/mycontainer/myblockblob" );
-# $request->content_type( 'text/html; charset=UTF-8' );
-# $request->header( ':x-ms-meta-Category', 'Web pages' );
-# $request->header( ':x-ms-blob-type', 'BlockBlob' );
-# $request->content('<p>Hello there!</p>');
-# $request->header( 'Content-MD5', md5_base64($request->content).'==' );
-# $request->header( 'If-None-Match', '*' );
+# my $uri = URI->new(
+#    "https://$account.blob.core.windows.net/mycontainer/myblockblob");
+# my $content = '<p>Hello there!</p>';
+# my $request = PUT $uri,
+#     'Content-Type'        => 'text/html; charset=UTF-8',
+#     ':x-ms-meta-Category' => 'Web pages',
+#     ':x-ms-blob-type'     => 'BlockBlob',
+#     'Content-MD5'         => md5_base64($content) . '==',
+#     'If-None-Match'       => '*',
+#     'Content'             => $content;
 
 # Get Blob
-# my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/mycontainer/myblockblob" );
-# $request->header( 'If-Match', '0x8CE8CA7ECD349BE' );
+# my $uri = URI->new("https://$account.blob.core.windows.net/mycontainer/myblockblob");
+# my $request = GET $uri, 'If-Match', '0x8CE8CF67ABC00F3';
 
 # Get Blob Properties
-# my $request = HTTP::Request->new( HEAD => "https://$account.blob.core.windows.net/mycontainer/myblockblob" );
-# $request->header( 'If-Match', '0x8CE8CA7ECD349BE' );
+# my $uri = URI->new("https://$account.blob.core.windows.net/mycontainer/myblockblob");
+# my $request = HEAD $uri, 'If-Match', '0x8CE8CF67ABC00F3';
 
 # Get Blob Metadata
-# my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/mycontainer/myblockblob?comp=metadata" );
+# my $uri = URI->new("https://$account.blob.core.windows.net/mycontainer/myblockblob");
+# $uri->query_form( [ comp => 'metadata' ] );
+# my $request = GET $uri, 'If-Match', '0x8CE8CF67ABC00F3';
 
 # Set Blob Metadata
-# my $request = HTTP::Request->new( PUT => "https://$account.blob.core.windows.net/mycontainer/myblockblob?comp=metadata" );
-# $request->header( ':x-ms-meta-Colour', 'Orange' );
-
-# Delete Blob
-# my $request = HTTP::Request->new( DELETE => "https://$account.blob.core.windows.net/mycontainer/myblockblob" );
-# $request->header( 'If-Match', '0x8CE8CA7ECD349BE' );
+# my $uri = URI->new("https://$account.blob.core.windows.net/mycontainer/myblockblob");
+# $uri->query_form( [ comp => 'metadata' ] );
+# my $request = PUT $uri, ':x-ms-meta-Colour', 'Orange', 'If-Match', '0x8CE8CF67ABC00F3';
 
 # Lease Blob
-# my $request = HTTP::Request->new( PUT => "https://$account.blob.core.windows.net/mycontainer/myblockblob?comp=lease" );
-# $request->header( ':x-ms-lease-action', 'acquire' );
+# my $uri = URI->new("https://$account.blob.core.windows.net/mycontainer/myblockblob");
+# $uri->query_form( [ comp => 'lease' ] );
+# my $request = PUT $uri, ':x-ms-lease-action', 'acquire';
+
+# Delete Blob
+# my $uri = URI->new("https://$account.blob.core.windows.net/mycontainer/myblockblob");
+# my $request = DELETE $uri, 'If-Match', '0x8CE8CF7243F2B5C';
 
 # And now the library code
 
