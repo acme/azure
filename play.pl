@@ -17,35 +17,35 @@ my $primary_access_key
     = 'XXX';
 
 # Get Blob Service Properties
-my $request = HTTP::Request->new( GET => "http://$account.blob.core.windows.net/?restype=service&comp=properties" );
+my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/?restype=service&comp=properties" );
 
 # Create Container
-# my $request = HTTP::Request->new( PUT => "http://$account.blob.core.windows.net/mycontainer?restype=container" );
+# my $request = HTTP::Request->new( PUT => "https://$account.blob.core.windows.net/mycontainer?restype=container" );
 
 # List Containers
-# my $request = HTTP::Request->new( GET => "http://$account.blob.core.windows.net/?comp=list" );
+# my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/?comp=list" );
 
 # Get Container Properties
-# my $request = HTTP::Request->new( GET => "http://$account.blob.core.windows.net/mycontainer?restype=container" );
+# my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/mycontainer?restype=container" );
 
 # Put Container Metadata
-# my $request = HTTP::Request->new( PUT => "http://$account.blob.core.windows.net/mycontainer?restype=container&comp=metadata" );
+# my $request = HTTP::Request->new( PUT => "https://$account.blob.core.windows.net/mycontainer?restype=container&comp=metadata" );
 # $request->header( ':x-ms-meta-Category', 'Images' );
 
 # Get Container Metadata
-# my $request = HTTP::Request->new( GET => "http://$account.blob.core.windows.net/mycontainer?restype=container&comp=metadata" );
+# my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/mycontainer?restype=container&comp=metadata" );
 
 # Get Container ACL
-# my $request = HTTP::Request->new( GET => "http://$account.blob.core.windows.net/mycontainer?restype=container&comp=acl" );
+# my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/mycontainer?restype=container&comp=acl" );
 
 # Delete Container
-# my $request = HTTP::Request->new( DELETE => "http://$account.blob.core.windows.net/mycontainer?restype=container" );
+# my $request = HTTP::Request->new( DELETE => "https://$account.blob.core.windows.net/mycontainer?restype=container" );
 
 # List Blobs
-# my $request = HTTP::Request->new( GET => "http://$account.blob.core.windows.net/mycontainer?restype=container&comp=list&include=metadata" );
+# my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/mycontainer?restype=container&comp=list&include=metadata" );
 
 # Put Blob
-# my $request = HTTP::Request->new( PUT => "http://$account.blob.core.windows.net/mycontainer/myblockblob" );
+# my $request = HTTP::Request->new( PUT => "https://$account.blob.core.windows.net/mycontainer/myblockblob" );
 # $request->content_type( 'text/html; charset=UTF-8' );
 # $request->header( ':x-ms-meta-Category', 'Web pages' );
 # $request->header( ':x-ms-blob-type', 'BlockBlob' );
@@ -54,26 +54,26 @@ my $request = HTTP::Request->new( GET => "http://$account.blob.core.windows.net/
 # $request->header( 'If-None-Match', '*' );
 
 # Get Blob
-# my $request = HTTP::Request->new( GET => "http://$account.blob.core.windows.net/mycontainer/myblockblob" );
+# my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/mycontainer/myblockblob" );
 # $request->header( 'If-Match', '0x8CE8CA7ECD349BE' );
 
 # Get Blob Properties
-# my $request = HTTP::Request->new( HEAD => "http://$account.blob.core.windows.net/mycontainer/myblockblob" );
+# my $request = HTTP::Request->new( HEAD => "https://$account.blob.core.windows.net/mycontainer/myblockblob" );
 # $request->header( 'If-Match', '0x8CE8CA7ECD349BE' );
 
 # Get Blob Metadata
-# my $request = HTTP::Request->new( GET => "http://$account.blob.core.windows.net/mycontainer/myblockblob?comp=metadata" );
+# my $request = HTTP::Request->new( GET => "https://$account.blob.core.windows.net/mycontainer/myblockblob?comp=metadata" );
 
 # Set Blob Metadata
-# my $request = HTTP::Request->new( PUT => "http://$account.blob.core.windows.net/mycontainer/myblockblob?comp=metadata" );
+# my $request = HTTP::Request->new( PUT => "https://$account.blob.core.windows.net/mycontainer/myblockblob?comp=metadata" );
 # $request->header( ':x-ms-meta-Colour', 'Orange' );
 
 # Delete Blob
-# my $request = HTTP::Request->new( DELETE => "http://$account.blob.core.windows.net/mycontainer/myblockblob" );
+# my $request = HTTP::Request->new( DELETE => "https://$account.blob.core.windows.net/mycontainer/myblockblob" );
 # $request->header( 'If-Match', '0x8CE8CA7ECD349BE' );
 
 # Lease Blob
-# my $request = HTTP::Request->new( PUT => "http://$account.blob.core.windows.net/mycontainer/myblockblob?comp=lease" );
+# my $request = HTTP::Request->new( PUT => "https://$account.blob.core.windows.net/mycontainer/myblockblob?comp=lease" );
 # $request->header( ':x-ms-lease-action', 'acquire' );
 
 # And now the library code
