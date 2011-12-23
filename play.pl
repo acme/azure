@@ -102,6 +102,50 @@ my $request = GET $uri;
 # my $uri = URI->new("https://$account.blob.core.windows.net/mycontainer/myblockblob");
 # my $request = DELETE $uri, 'If-Match', '0x8CE8CF7243F2B5C';
 
+# Put Block
+# my $uri
+#     = URI->new("https://$account.blob.core.windows.net/mycontainer/myblob");
+# $uri->query_form(
+#     [ comp => 'block', blockid => encode_base64( '00000001', '' ) ] );
+# my $content = '<p>Hello ';
+# my $request = PUT $uri,
+#     'Content-MD5' => md5_base64($content) . '==',
+#     'Content'     => $content;
+
+# my $uri
+#     = URI->new("https://$account.blob.core.windows.net/mycontainer/myblob");
+# $uri->query_form(
+#     [ comp => 'block', blockid => encode_base64( '00000002', '' ) ] );
+# my $content = 'there!</p>';
+# my $request = PUT $uri,
+#     'Content-MD5' => md5_base64($content) . '==',
+#     'Content'     => $content;
+
+# Put Block List
+# my $uri
+#     = URI->new("https://$account.blob.core.windows.net/mycontainer/myblob");
+# $uri->query_form( [ comp => 'blocklist' ] );
+# my $first  = encode_base64( '00000001', '' );
+# my $second = encode_base64( '00000002', '' );
+# my $content = qq{<?xml version="1.0" encoding="utf-8"?>
+#  <BlockList>
+#    <Uncommitted>$first</Uncommitted>
+#    <Uncommitted>$second</Uncommitted>
+#  </BlockList>};
+# my $request = PUT $uri,
+#     ':x-ms-blob-content-type' => 'text/html; charset=UTF-8',
+#     ':x-ms-blob-content-md5'  => md5_base64('<p>Hello there!</p>') . '==',
+#     ':x-ms-meta-Category'     => 'Web pages',
+#     'Content-MD5'             => md5_base64($content) . '==',
+#     'If-None-Match'           => '*',
+#     'Content'                 => $content;
+
+# Get Block List
+# my $uri
+#     = URI->new("https://$account.blob.core.windows.net/mycontainer/myblob");
+# $uri->query_form( [ comp => 'blocklist' ] );
+# my $request = GET $uri;
+
 # And now the library code
 
 $request->header( ':x-ms-version', '2011-08-18' );
