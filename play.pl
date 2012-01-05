@@ -1,14 +1,12 @@
 #!/home/acme/Public/perl-5.14.2/bin/perl
 use strict;
 use warnings;
+use lib 'lib';
 use 5.14.0;
-use Digest::MD5 qw(md5_base64);
-use Digest::SHA qw(hmac_sha256_base64);
-use HTTP::Date;
 use HTTP::Request;
 use HTTP::Request::Common qw(GET HEAD PUT DELETE);
 use LWP::UserAgent;
-use MIME::Base64;
+use Net::Azure::BlobService;
 use URI::URL;
 use URI::QueryParam;
 use XML::LibXML;
@@ -17,6 +15,11 @@ my $account = 'astray';
 
 my $primary_access_key
     = 'XXX';
+
+my $blobservice = Net::Azure::BlobService->new(
+    account            => $account,
+    primary_access_key => $primary_access_key
+);
 
 # Get Blob Service Properties
 my $uri = URI->new("https://$account.blob.core.windows.net/");
@@ -146,66 +149,17 @@ my $request = GET $uri;
 # $uri->query_form( [ comp => 'blocklist' ] );
 # my $request = GET $uri;
 
-# And now the library code
-
-$request->header( ':x-ms-version', '2011-08-18' );
-$request->header( 'Date',          time2str() );
-$request->content_length( length $request->content );
-
-my $canonicalized_headers = join "",
-    map { lc( substr( $_, 1 ) ) . ':' . $request->header($_) . "\n" }
-    sort grep {/^:x-ms/i} $request->header_field_names;
-
-# say "headers: $canonicalized_headers";
-
-my $canonicalized_resource = '/' . $account . $request->uri->path . join "",
-    map {
-          "\n"
-        . lc($_) . ':'
-        . join( ',', sort $request->uri->query_param($_) )
-    } sort $request->uri->query_param;
-
-# say "resource: [$canonicalized_resource]";
-
-my $string_to_sign
-    = $request->method . "\n"
-    . ( $request->header('Content-Encoding')    // '' ) . "\n"
-    . ( $request->header('Content-Language')    // '' ) . "\n"
-    . ( $request->header('Content-Length')      // '' ) . "\n"
-    . ( $request->header('Content-MD5')         // '' ) . "\n"
-    . ( $request->header('Content-Type')        // '' ) . "\n"
-    . ( $request->header('Date')                // '' ) . "\n"
-    . ( $request->header('If-Modified-Since')   // '' ) . "\n"
-    . ( $request->header('If-Match')            // '' ) . "\n"
-    . ( $request->header('If-None-Match')       // '' ) . "\n"
-    . ( $request->header('If-Unmodified-Since') // '' ) . "\n"
-    . ( $request->header('Range')               // '' ) . "\n"
-    . $canonicalized_headers
-    . $canonicalized_resource;
-
-say $string_to_sign;
-
-my $signature = hmac_sha256_base64( $string_to_sign,
-    decode_base64($primary_access_key) );
-$signature .= '=';
-
-#say $signature;
-
-$request->header( 'Authorization', "SharedKey $account:$signature" );
-
-say $request->as_string;
-
-my $ua = LWP::UserAgent->new;
-$ua->env_proxy;
-
-my $response = $ua->request($request);
+my $response = $blobservice->make_http_request($request);
 
 if ( $response->is_success ) {
-    say $response->as_string;
-    my $xml = $response->decoded_content;
-    say $xml;
-    my $dom = XML::LibXML->load_xml( string => $xml );
-    say $dom->toString(1);
+    if ( $response->content_type eq 'application/xml' ) {
+        my $xml = $response->decoded_content;
+        say $xml;
+        my $dom = XML::LibXML->load_xml( string => $xml );
+        say $dom->toString(1);
+    } else {
+        say $response->as_string;
+    }
 } else {
     die $response->status_line;
 }
