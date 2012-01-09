@@ -2,6 +2,7 @@ package Net::Azure::BlobService;
 use HTTP::Date;
 use Digest::MD5 qw(md5_base64);
 use Digest::SHA qw(hmac_sha256_base64);
+use LWP::UserAgent;
 use MIME::Base64;
 use Moose;
 our $VERSION = '0.35';
