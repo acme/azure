@@ -69,3 +69,63 @@ sub make_http_request {
 }
 
 __PACKAGE__->meta->make_immutable;
+
+__END__
+
+=head1 NAME
+
+Net::Azure::BlobService - Interface to Azure Blob Service
+
+=head1 SYNOPSIS
+
+  my $blobservice = Net::Azure::BlobService->new(
+      primary_access_key => $primary_access_key );
+
+  # Get Blob Service Properties
+  my $uri = URI->new("https://$account.blob.core.windows.net/");
+  $uri->query_form( [ restype => 'service', comp => 'properties' ] );
+  my $request = GET $uri;
+
+  my $response = $blobservice->make_http_request($request);
+
+=head1 DESCRIPTION
+
+This module provides access to the REST interface to Windows Azure Platform Blob
+Service for storing text and binary data:
+
+  http://msdn.microsoft.com/en-us/library/windowsazure/dd135733.aspx
+
+You must sign up to a storage account and obtain a primary access key. Create an
+HTTP request as per the page above and this module can sign the request, make
+the request and return an HTTP::Response object.
+
+This module intentionally does not interpret the response, but typically it will
+have content type of 'application/xml' which you can parse with your favourite
+XML parser.
+
+=head1 METHODS
+
+=head2 make_http_request
+
+Sign and make an HTTP request:
+
+  my $response = $blobservice->make_http_request($request);
+
+=head2 sign_http_request
+
+Sign an HTTP request:
+
+  my $signed_request = $blobservice->sign_http_request($request);
+
+=head1 AUTHOR
+
+Leon Brocard <acme@astray.com>
+
+=head1 COPYRIGHT
+
+Copyright (C) 2012, Leon Brocard.
+
+=head1 LICENSE
+
+This module is free software; you can redistribute it or
+modify it under the same terms as Perl itself.
