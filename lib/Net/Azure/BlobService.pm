@@ -4,6 +4,7 @@ use Digest::MD5 qw(md5_base64);
 use Digest::SHA qw(hmac_sha256_base64);
 use MIME::Base64;
 use Moose;
+our $VERSION = '0.35';
 
 has 'primary_access_key' => ( is => 'ro', isa => 'Str', required => 1 );
 has 'user_agent' => (
