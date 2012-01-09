@@ -17,9 +17,7 @@ my $primary_access_key
     = 'XXX';
 
 my $blobservice = Net::Azure::BlobService->new(
-    account            => $account,
-    primary_access_key => $primary_access_key
-);
+    primary_access_key => $primary_access_key );
 
 # Get Blob Service Properties
 my $uri = URI->new("https://$account.blob.core.windows.net/");

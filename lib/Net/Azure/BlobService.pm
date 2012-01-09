@@ -5,9 +5,8 @@ use Digest::SHA qw(hmac_sha256_base64);
 use MIME::Base64;
 use Moose;
 
-has 'account'            => ( is => 'ro', isa => 'Str', required => 1 );
 has 'primary_access_key' => ( is => 'ro', isa => 'Str', required => 1 );
-has 'user_agent'         => (
+has 'user_agent' => (
     is      => 'ro',
     isa     => 'LWP::UserAgent',
     default => sub {
@@ -20,6 +19,9 @@ has 'user_agent'         => (
 sub sign_http_request {
     my ( $self, $http_request ) = @_;
 
+    my $host = $http_request->uri->host;
+    my ($account) = $host =~ /^(.+?)\./;
+
     $http_request->header( ':x-ms-version', '2011-08-18' );
     $http_request->header( 'Date',          time2str() );
     $http_request->content_length( length $http_request->content );
@@ -29,7 +31,7 @@ sub sign_http_request {
         sort grep {/^:x-ms/i} $http_request->header_field_names;
 
     my $canonicalized_resource
-        = '/' . $self->account . $http_request->uri->path . join "", map {
+        = '/' . $account . $http_request->uri->path . join "", map {
               "\n"
             . lc($_) . ':'
             . join( ',', sort $http_request->uri->query_param($_) )
@@ -56,7 +58,7 @@ sub sign_http_request {
     $signature .= '=';
 
     $http_request->header( 'Authorization',
-        "SharedKey " . $self->account . ":" . $signature );
+        "SharedKey " . $account . ":" . $signature );
     return $http_request;
 }
 
