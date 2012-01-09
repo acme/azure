@@ -101,6 +101,9 @@ You must sign up to a storage account and obtain a primary access key. Create an
 HTTP request as per the page above and this module can sign the request, make
 the request and return an HTTP::Response object.
 
+See the examples/ directory for more examples on calling different Blob Service
+operations.
+
 This module intentionally does not interpret the response, but typically it will
 have content type of 'application/xml' which you can parse with your favourite
 XML parser.
