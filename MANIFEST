@@ -1,5 +1,6 @@
 Build.PL
 CHANGES
+examples/simple.pl
 lib/Net/Azure/BlobService.pm
 LICENSE
 MANIFEST			This list of files
